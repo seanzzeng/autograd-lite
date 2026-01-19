@@ -97,6 +97,15 @@ class Value:
 
         return new
     
+    def relu(self):
+        new = Value(0 if self.data < 0 else self.data, (self, ), 'ReLU')
+        def _backward():
+            # If output > 0, gradient is passes through, else gradient is 0
+            self.grad += (new.data > 0) * new.grad
+        new._backward = _backward
+        
+        return new
+    
     def backward(self):
         """
         Performs backpropagation to compute gradients for all nodes.
