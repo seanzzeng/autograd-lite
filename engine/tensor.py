@@ -97,3 +97,28 @@ class Tensor:
         self.grad = np.ones_like(self.data)
         for node in reversed(topo):
             node._backward()
+
+    # since neural network losses must become scalars, we need a function that sums 
+    # all the elements in the tensor to produce a scalar output
+    # axises are not handled here for now, current version is good enough for our use case
+    def sum(self):
+        new = Tensor(np.sum(self.data))
+        new._prev = {self}
+        new._op = 'sum'
+
+        def _backward():
+            # gradient of sum operation is just a tensor of ones (with same shape as self.data)
+            # we multiply by new.grad to account for the chain rule
+            self.grad += np.ones_like(self.data) * new.grad
+        
+        new._backward = _backward
+
+        return new
+    
+    # Now we need to implement matrix multiplication to 
+    # calculate the output of a layer given the input and weights in one operation.
+
+
+    # TODO:
+    # matmul, broadcasting, transpose, reshape, axis handling for sum, gradient checking
+    
