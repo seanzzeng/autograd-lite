@@ -20,6 +20,8 @@ class Tensor:
     
     # element wise addition (basically the same as scalar addition)
     def __add__(self, other):
+        # If other is a scalar, we need to convert it to a tensor with the same shape as self.data, 
+        # so that the addition can be done element-wise.
         other = other if isinstance(other, Tensor) else Tensor(other)
         new = Tensor(self.data + other.data)
         new._prev = {self, other}
@@ -33,6 +35,31 @@ class Tensor:
 
         return new
     
+    def __neg__(self):
+        new = Tensor(-self.data)
+        new._prev = {self}
+        new._op = 'neg'
+
+        def _backward():
+            self.grad += -new.grad
+
+        new._backward = _backward
+        return new
+    
+    # python will try this when the left operand doesn't support the operation, so we need to implement this for cases like 2 + tensor
+    def __radd__(self, other):
+        return self + other
+    
+    def __sub__(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        return self + (-other)
+    
+    def __rsub__(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        return (other) + (-self)
+    
+
+
     # element wise multiplication (again, exactly the same)
     def __mul__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
@@ -47,6 +74,10 @@ class Tensor:
         new._backward = _backward
 
         return new
+    
+    def __rmul__(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        return self * other
     
     def backward(self):
         
