@@ -1,16 +1,13 @@
 # Why is this even needed?
 
-# A neural network can theoretically be trained on using scalars alone, but in practice 
-# this is highly inefficient. Instead, we use tensors, which are multi-dimensional arrays, to 
-# represent inputs, weights, biases, and outputs. This allows for batch processing and 
-# parallel computations, significantly speeding up the training process.
-
+# a neural network can theoretically be trained on a model that uses scalars, but this is 
+# practically impossible 
 import numpy as np
 
 class Tensor:
     def __init__(self, data):
         self.data = np.array(data)
-        # Gradient is initialised to zero, will be updated during backpropagation
+        # gradient is initialised to zero, will be updated during backpropagation, ensure its the same shape
         self.grad = np.zeros_like(self.data) 
         self._backward = lambda: None
         self._prev = set()
@@ -121,4 +118,3 @@ class Tensor:
 
     # TODO:
     # matmul, broadcasting, transpose, reshape, axis handling for sum, gradient checking
-    

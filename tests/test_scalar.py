@@ -14,6 +14,7 @@ class TestScalarOperations(unittest.TestCase):
         b = Value(3.0)
         c = a + b
 
+        # just gets past stupid floating point arithmetic errors
         self.assertAlmostEqual(c.data, c_torch.item(), places=5)
 
     def test_multiplication(self):

@@ -83,9 +83,9 @@ class Value:
 
         return new
     
-    # Activation function for this walkthrough
+    # activation function for this walkthrough
     # The purpose of activation functions is to introduce some non-linearity into the network, 
-    # otherwise the final expression would just be another linear transformation.
+    # otherwise the final expression would just be another linear transformation (if you did the math).
     def tanh(self):
         x = self.data
         t = (math.exp(2*x)-1)/(math.exp(2*x)+1)
@@ -100,29 +100,28 @@ class Value:
     def relu(self):
         new = Value(0 if self.data < 0 else self.data, (self, ), 'ReLU')
         def _backward():
-            # If output > 0, gradient is passes through, else gradient is 0
+            # If output > 0, gradient just passes through, else gradient is 0
             self.grad += (new.data > 0) * new.grad
         new._backward = _backward
         
         return new
     
     def backward(self):
-        """
-        Performs backpropagation to compute gradients for all nodes.
-        Builds a topological ordering of the graph and then calls each node's stored 
-        backward function in reverse order.
-        """
+        # topologically orders the graph (any directed edge (u,v), u comes before v)
+        # performs backpropagation to compute gradients for all nodes by calling each node's 
+        # stored backward function in reverse order.
+    
         topo = []
         visited = set()
 
         # Topological sort
-        def build_topo(vertex):
+        def sort_topo(vertex):
             if vertex not in visited:
                 visited.add(vertex)
                 for child in vertex._prev:
-                    build_topo(child)
+                    sort_topo(child)
                 topo.append(vertex)
-        build_topo(self)
+        sort_topo(self)
 
         # Set to 1.0 since dL/dL = 1.0
         self.grad = 1.0
