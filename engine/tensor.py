@@ -20,11 +20,37 @@ class Tensor:
         # If other is a scalar, we need to convert it to a tensor with the same shape as self.data, 
         # so that the addition can be done element-wise.
         other = other if isinstance(other, Tensor) else Tensor(other)
+        # numpy broadcasts this for us (forward pass only)
         new = Tensor(self.data + other.data)
         new._prev = {self, other}
         new._op = '+'
 
         def _backward():
+            # reverses the broadcasting that numpy automatically did (if it did broadcast)
+            grad_self = new.grad
+            grad_other = new.grad
+
+            # in a 2D matrix example, sums all the rows if its adding to a scalar (e.g. bias)
+            # so they can actually add (sum because they all contribute). generalises to higher
+            # dimensions as well (but this is never used in a MLP)
+            while grad_self.ndim > self.data.ndim:
+                # axis = 0 refers to the outermost layer (so the first number in 
+                # a tensor), all this loop does is equate the number of dimensions
+                grad_self = grad_self.sum(axis = 0)
+            for index, dim in enumerate(self.data.shape):
+                # only dimension size that permits broadcasting (1 is pretty much only 
+                # used for broadcasting). the function of this loop is to equate the shape itself
+                # (since dimensions equating doesn't imply shape matching)
+                if dim == 1:
+                    grad_self = grad_self.sum(axis = index, keepdims = True)
+
+            while grad_other.ndim > self.data.ndim:
+                grad_other = grad_other.sum(axis = 0)
+            for index, dim in enumerate(self.data.shape):
+                if dim == 1:
+                    grad_other = grad_other.sum(axis = index, keepdims = True)
+
+
             self.grad += new.grad
             other.grad += new.grad
         
@@ -65,8 +91,25 @@ class Tensor:
         new._op = '*'
 
         def _backward():
-            self.grad += new.grad * other.data
-            other.grad += new.grad * self.data
+            grad_self = new.grad * other.data
+            grad_other = new.grad * self.data
+
+            # same reverse broadcasting code as __add__()
+            while grad_self.ndim > self.data.ndim:
+                grad_self = grad_self.sum(axis = 0)
+            for index, dim in enumerate(self.data.shape):
+                if dim == 1:
+                    grad_self = grad_self.sum(axis = index, keepdims = True)
+
+            while grad_other.ndim > self.data.ndim:
+                grad_other = grad_other.sum(axis = 0)
+            for index, dim in enumerate(self.data.shape):
+                if dim == 1:
+                    grad_other = grad_other.sum(axis = index, keepdims = True)
+
+
+            self.grad += grad_self
+            other.grad += grad_other
         
         new._backward = _backward
 
