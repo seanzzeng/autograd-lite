@@ -16,7 +16,7 @@ def main():
     # output layer: 1 neuron (0 or 1)
     w1 = Tensor(np.random.randn(2, 4) * 0.1)
     b1 = Tensor(np.zeros((1,4)))
-    w2 = Tensor(np.random.randn(2, 4) * 0.1)
+    w2 = Tensor(np.random.randn(4, 1) * 0.1)
     b2 = Tensor(np.zeros((1,4)))
 
     params = [w1, b1, w2, b2]

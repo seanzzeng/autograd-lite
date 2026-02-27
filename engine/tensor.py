@@ -10,7 +10,7 @@ import numpy as np
 
 class Tensor:
     def __init__(self, data):
-        self.data = np.array(data)
+        self.data = np.array(data, dtype=float)
         # gradient is initialised to zero, will be updated during backpropagation, ensure its the same shape
         self.grad = np.zeros_like(self.data) 
         self._backward = lambda: None
@@ -54,9 +54,8 @@ class Tensor:
                 if dim == 1:
                     grad_other = grad_other.sum(axis = index, keepdims = True)
 
-
-            self.grad += new.grad
-            other.grad += new.grad
+            self.grad += grad_self
+            other.grad += grad_other
         
         new._backward = _backward
 
