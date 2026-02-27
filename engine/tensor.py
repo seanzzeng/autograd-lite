@@ -44,9 +44,9 @@ class Tensor:
                 if dim == 1:
                     grad_self = grad_self.sum(axis = index, keepdims = True)
 
-            while grad_other.ndim > self.data.ndim:
+            while grad_other.ndim > other.data.ndim:
                 grad_other = grad_other.sum(axis = 0)
-            for index, dim in enumerate(self.data.shape):
+            for index, dim in enumerate(other.data.shape):
                 if dim == 1:
                     grad_other = grad_other.sum(axis = index, keepdims = True)
 
@@ -101,9 +101,9 @@ class Tensor:
                 if dim == 1:
                     grad_self = grad_self.sum(axis = index, keepdims = True)
 
-            while grad_other.ndim > self.data.ndim:
+            while grad_other.ndim > other.data.ndim:
                 grad_other = grad_other.sum(axis = 0)
-            for index, dim in enumerate(self.data.shape):
+            for index, dim in enumerate(other.data.shape):
                 if dim == 1:
                     grad_other = grad_other.sum(axis = index, keepdims = True)
 
@@ -125,13 +125,13 @@ class Tensor:
         visited = set()
 
         # Topological sort
-        def build_topo(vertex):
+        def sort_topo(vertex):
             if vertex not in visited:
                 visited.add(vertex)
                 for child in vertex._prev:
-                    build_topo(child)
+                    sort_topo(child)
                 topo.append(vertex)
-        build_topo(self)
+        sort_topo(self)
 
         # set gradient to all 1's since we are doing dL/dL, but shape must be the same as the tensor's data
         self.grad = np.ones_like(self.data)
@@ -155,9 +155,42 @@ class Tensor:
 
         return new
     
-    # Now we need to implement matrix multiplication to 
-    # calculate the output of a layer given the input and weights in one operation.
+    # this version of matmul would break for 3D tensors and beyond as tranposing reverses all 
+    # dimensions which won't work when backpropagating since numpy does matrix multiplication with
+    # tensors by using batched matrix multiplication (however this doesn't matter with MLPs)
+    def matmul(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        new = Tensor(self.data @ other.data)
+        new._prev = {self, other}
+        new._op = '@'
+
+        def _backward():
+            # should write an explanation for this formula 
+            self.grad += new.grad @ other.data.T
+            other.data += self.data.T @ new.grad
+        
+        new._backward = _backward
+        return new
+    
+    # @ symbol notation
+    def __matmul__(self, other):
+        return self.matmul(other)
+    
+    def relu(self):
+        new = Tensor(np.maximum(0, self.data))
+        new._prev = {self}
+        new._op = 'relu'
+
+        def _backward():
+            # If output > 0, gradient just passes through, else gradient is 0
+            self.grad += (new.data > 0) * new.grad
+        new._backward = _backward
+        
+        return new
 
 
-    # TODO:
-    # matmul, broadcasting, transpose, reshape, axis handling for sum, gradient checking
+    # could do in the futrure
+    # transpose, reshape, axis handling for sum (GEEKED), advanced optimisers (ADAM /rmsPrOP)
+    # softmax & cross-entropy loss
+    # algorithmic graph optimisations (prolly not gonna happen)
+    # n dimensional broadcasting
