@@ -1,7 +1,11 @@
 # Why is this even needed?
 
 # a neural network can theoretically be trained on a model that uses scalars, but this is 
-# practically impossible 
+# practically impossible. the advantage of tensors is that it can compute the weighted sum in 
+# for all neurons in a layer in one operation, and more dimensions can be added (for example
+# we can process multiple inputs at once). very efficient because tensors pack the raw numbers
+# into a tightly packed block of memory (contiguous memory). this block can then be handled to a 
+# GPU
 import numpy as np
 
 class Tensor:
@@ -167,7 +171,7 @@ class Tensor:
         def _backward():
             # should write an explanation for this formula 
             self.grad += new.grad @ other.data.T
-            other.data += self.data.T @ new.grad
+            other.grad += self.data.T @ new.grad
         
         new._backward = _backward
         return new
