@@ -12,19 +12,19 @@ def main():
     np.random.seed(42) # random numbers are always the same -- 42 is for convention
 
     # input layer: 2 neurons (since 2 things to change)
-    # hidden layer: 4 neurons
+    # hidden layer: 16 neurons (4 did not work)
     # output layer: 1 neuron (0 or 1)
-    w1 = Tensor(np.random.randn(2, 4) * 0.1)
-    b1 = Tensor(np.zeros((1,4)))
-    w2 = Tensor(np.random.randn(4, 1) * 0.1)
-    b2 = Tensor(np.zeros((1,4)))
+    w1 = Tensor(np.random.randn(2, 16) * 0.1)
+    b1 = Tensor(np.zeros((1,16)))
+    w2 = Tensor(np.random.randn(16, 1) * 0.1)
+    b2 = Tensor(np.zeros((1,1)))
 
     params = [w1, b1, w2, b2]
     learning_rate = 0.05
 
     print("start training \n")
 
-    for i in range(150):
+    for i in range(200):
         intermediate = (X @ w1 + b1).relu()
         pred = intermediate @ w2 + b2 # no relu on the output otherwise negative numbers are gone
 
