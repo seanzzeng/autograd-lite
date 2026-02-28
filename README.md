@@ -48,6 +48,6 @@ Here, we can observe that the loss value gradually decreases as the number of it
 
 ## References
 * **[3B1B: Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)**: Intro to neural networks with good visualisations
-* **[Micrograd](https://github.com/karpathy/micrograd)**: Inspiration for this project
+* **[Micrograd](https://github.com/karpathy/micrograd)**: Inspiration for this project and how I learned the basics of an autodiff engine. `scalar.py` is very similar to micrograd as a result.
 * **[The Matrix Calculus You Need For Deep Learning](https://arxiv.org/abs/1802.01528)**: Introductory paper to matrix calculus in the context of ML (however, this paper does not explain matmul chain rule)
 
