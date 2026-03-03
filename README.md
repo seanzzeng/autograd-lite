@@ -9,7 +9,7 @@ This project is a vectorised reverse-mode library written in Python that is able
 * **Vectorised:** Removes scalar bottlenecks through using tensor operations (including matrix multiplications `@`)
 * **Broadcasting:** Handles reverse shape broadcasting during backpropagation. This is done by accumulating gradients across dimensions when adding tensors of different shapes during the backward pass. Note the forward broadcasting is natively handled by NumPy.
 
-## Validation:
+## Validation
 We focus on the XOR problem for now. This will be replaced by MNIST in the future.
 [The logic of the XOR problem is not linearly separable, meaning it cannot be solved by a standard single-layer perceptron.](https://dev.to/jbahire/demystifying-the-xor-problem-1blk)  
 We need at least a multilayer perceptron (MLP), which requires an autodiff library. The results matching the targets prove the engine is functional.  
