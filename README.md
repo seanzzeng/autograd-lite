@@ -4,13 +4,13 @@ This project is a vectorised reverse-mode library written in Python that is able
 
 
 
-## Capabilities
+## Current Capabilities
 * **Reverse-Mode Autodiff:** Calculates gradients via backpropagation.
-* **Fully Vectorised:** Removes scalar bottlenecks through utilising matrix operations instead (including matrix multiplications `@`)
-* **Broadcasting:** Handles reverse shape broadcasting during backpropagation (accumulating gradients across dimensions when adding tensors of different shapes during the backward pass). Note the forward broadcasting is natively handled by NumPy (if possible).
-* **Compact:** This project has one external dependency, which is NumPy. As this library is obviously not production-grade and cuts all unnecessary features, the code and logic is much more understandable.
+* **Vectorised:** Removes scalar bottlenecks through using tensor operations (including matrix multiplications `@`)
+* **Broadcasting:** Handles reverse shape broadcasting during backpropagation. This is done by accumulating gradients across dimensions when adding tensors of different shapes during the backward pass. Note the forward broadcasting is natively handled by NumPy.
 
-## Validating the Engine: XOR Problem
+## Validation:
+We focus on the XOR problem for now. This will be replaced by MNIST in the future.
 [The logic of the XOR problem is not linearly separable, meaning it cannot be solved by a standard single-layer perceptron.](https://dev.to/jbahire/demystifying-the-xor-problem-1blk)  
 We need at least a multilayer perceptron (MLP), which requires an autodiff library. The results matching the targets prove the engine is functional.  
 Let's run `examples/xor.py`, noting that the parameters are initialised to random values.
@@ -39,7 +39,7 @@ Final Predictions: (target is [0, 1, 1, 0]):
 ```
 Here, we can observe that the loss value gradually decreases as the number of iterations increases, proving the library is functional.
 
-## Roadmap
+## Planning
 * Implement Adam to replace vanilla SGD, resulting in faster and more stable convergence.
 * More examples (MNIST).
 * Cross-Entropy Loss & Softmax.
