@@ -3,6 +3,10 @@ from sklearn.datasets import fetch_openml
 from engine.tensor import Tensor
 import engine.nn as nn
 import engine.optimisers as optim
+import matplotlib.pyplot as plt
+
+losses = []
+accuracies = []
 
 print("Fetching MNIST dataset...")
 mnist = fetch_openml('mnist_784', version=1, cache=True, parser='auto')
@@ -40,11 +44,31 @@ for i in range(1001):
     loss.backward()
     optimiser.step()
 
-    if i % 100 == 0:
-        predictions = np.argmax(pred.data, axis = 1)
-        targets = np.argmax(Y_batch.data, axis = 1)
-        accuracy = np.mean(predictions == targets) * 100
+    predictions = np.argmax(pred.data, axis = 1)
+    targets = np.argmax(Y_batch.data, axis = 1)
+    accuracy = np.mean(predictions == targets) * 100
 
+    losses.append(loss.data)
+    accuracies.append(accuracy)
+
+    if i % 100 == 0:
         print(f"Iteration {i:4d} | Loss: {loss.data:.4f} | Batch Accuracy: {accuracy:.2f}%")
 
 print("\nTraining complete\n")
+
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.plot(losses, color='tab:red')
+plt.title("Training Loss")
+plt.xlabel("Step")
+plt.ylabel("Loss")
+
+plt.subplot(1, 2, 2)
+plt.plot(accuracies, color='tab:blue')
+plt.title("Batch Accuracy (%)")
+plt.xlabel("Step")
+plt.ylabel("Accuracy")
+
+plt.tight_layout()
+plt.show()
