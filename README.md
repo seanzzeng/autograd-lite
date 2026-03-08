@@ -6,11 +6,12 @@ This project is a vectorised reverse-mode library written in Python that is able
 
 ## Current Capabilities
 * **Reverse-Mode Autodiff:** Calculates gradients via backpropagation.
-* **Vectorised:** Removes scalar bottlenecks through using tensor operations (including matrix multiplications `@`)
+* **Vectorised:** Removes scalar bottlenecks through using matrix operations (including matrix multiplications `@`)
 * **Broadcasting:** Handles reverse shape broadcasting during backpropagation. This is done by accumulating gradients across dimensions when adding tensors of different shapes during the backward pass. Note the forward broadcasting is natively handled by NumPy.
+* **Abstraction:** Replicates PyTorch's API (e.g. nn.Sequential)
 
-## Validation
-We focus on the XOR problem for now. This will be replaced by MNIST in the future.
+## Demo: XOR
+We focus on the XOR problem as it is the simplest application of machine learning.
 [The logic of the XOR problem is not linearly separable, meaning it cannot be solved by a standard single-layer perceptron.](https://dev.to/jbahire/demystifying-the-xor-problem-1blk)  
 We need at least a multilayer perceptron (MLP), which requires an autodiff library. The results matching the targets prove the engine is functional.  
 Let's run `examples/xor.py`, noting that the parameters are initialised to random values.
@@ -39,9 +40,32 @@ Final Predictions: (target is [0, 1, 1, 0]):
 ```
 Here, we can observe that the loss value gradually decreases as the number of iterations increases, proving the library is functional.
 
+## Demo: MNIST
+This engine is capable of training a MLP on the MNIST dataset (100,000+ params) to ~90% accuracy using Mean Squared Error (MSE) loss. 
+We can check this by executing `examples/mnist.py`.
+```
+Fetching MNIST dataset...
+Start training 
+
+Iteration    0 | Loss: 1.3746 | Batch Accuracy: 7.03%
+Iteration  100 | Loss: 0.2722 | Batch Accuracy: 89.84%
+Iteration  200 | Loss: 0.2186 | Batch Accuracy: 92.19%
+Iteration  300 | Loss: 0.1848 | Batch Accuracy: 94.53%
+Iteration  400 | Loss: 0.1934 | Batch Accuracy: 93.75%
+Iteration  500 | Loss: 0.1825 | Batch Accuracy: 93.75%
+Iteration  600 | Loss: 0.1626 | Batch Accuracy: 96.09%
+Iteration  700 | Loss: 0.1500 | Batch Accuracy: 95.31%
+Iteration  800 | Loss: 0.2046 | Batch Accuracy: 90.62%
+Iteration  900 | Loss: 0.1746 | Batch Accuracy: 92.19%
+Iteration 1000 | Loss: 0.1938 | Batch Accuracy: 93.75%
+
+Training complete
+```
+We can visualise this using matplotlib:
+![MNIST Training Progress](mnist_training_results.png)
+
 ## Planning
-* Implement Adam to replace vanilla gradient descent, resulting in faster and more stable convergence.
-* More examples (MNIST).
+* Implement Adam to replace stochastic gradient descent, resulting in faster and more stable convergence.
 * Cross-Entropy Loss & Softmax.
 * This currently doesn't support tensors with more than 2 dimensions, so N-dimensional matrix operations could be something to look into.
 * Layer Normalisation.
