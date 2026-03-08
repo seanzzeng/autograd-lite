@@ -83,8 +83,6 @@ class Tensor:
     def __rsub__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         return (other) + (-self)
-    
-
 
     # element wise multiplication (again, exactly the same)
     def __mul__(self, other):
@@ -121,6 +119,27 @@ class Tensor:
     def __rmul__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         return self * other
+    
+    def __pow__(self, n):
+        assert isinstance(n, (int, float)), "only int/float powers allowed"
+        new = Tensor(self.data**n)
+        new._prev = {self,}
+        new._op = '**'
+
+        def _backward():
+            self.grad += (n * self.data**(n-1)) * new.grad # power rule
+
+        new._backward = _backward
+
+        return new
+    
+    def __truediv__(self, other): # self / other
+        other = other if isinstance(other, Tensor) else Tensor(other)
+
+        return self * (other**-1)
+    
+    def __rtruediv__(self, other): # other / self
+        return Tensor(other) * (self**-1)
     
     def backward(self):
         
