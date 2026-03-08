@@ -5,6 +5,7 @@
 import numpy as np
 from engine.tensor import Tensor
 import engine.nn as nn
+import engine.optimisers as optim
 
 def main():
     np.random.seed(67)
@@ -24,15 +25,19 @@ def main():
     # hidden layer: 16 neurons
     # output layer: 1 neuron (0 or 1)
 
+    optimiser = optim.SGD(model.parameters(), lr = learning_rate)
+
     print("Start training \n")
 
     for i in range(100):
         pred = model(X)
 
+        # mean squared error for loss
         loss = ((pred - Y) * (pred - Y)).sum()
 
-        model.zero_grad()
-        loss.backward() 
+        optimiser.zero_grad()
+        loss.backward()
+        optimiser.step()
 
         for p in model.parameters():
             p.data -= learning_rate * p.grad
