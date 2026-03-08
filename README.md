@@ -15,39 +15,34 @@ We focus on the XOR problem for now. This will be replaced by MNIST in the futur
 We need at least a multilayer perceptron (MLP), which requires an autodiff library. The results matching the targets prove the engine is functional.  
 Let's run `examples/xor.py`, noting that the parameters are initialised to random values.
 ```
-start training 
+Start training 
 
-Iteration 0: Loss: 2.0376
-Iteration 20: Loss: 0.8842
-Iteration 40: Loss: 0.6381
-Iteration 60: Loss: 0.2681
-Iteration 80: Loss: 0.0537
-Iteration 100: Loss: 0.0085
-Iteration 120: Loss: 0.0017
-Iteration 140: Loss: 0.0003
-Iteration 160: Loss: 0.0000
-Iteration 180: Loss: 0.0000
+Iteration 0: Loss: 6.9946
+Iteration 10: Loss: 0.8705
+Iteration 20: Loss: 0.5595
+Iteration 30: Loss: 0.3457
+Iteration 40: Loss: 0.1966
+Iteration 50: Loss: 0.1033
+Iteration 60: Loss: 0.0517
+Iteration 70: Loss: 0.0251
+Iteration 80: Loss: 0.0120
+Iteration 90: Loss: 0.0057
 
-training complete
+Training complete
 
 Final Predictions: (target is [0, 1, 1, 0]):
 
-[[0.001]
- [1.   ]
- [1.   ]
- [0.   ]]
+[[0.044]
+ [0.988]
+ [0.978]
+ [0.012]]
 ```
 Here, we can observe that the loss value gradually decreases as the number of iterations increases, proving the library is functional.
 
 ## Planning
-* Implement Adam to replace vanilla SGD, resulting in faster and more stable convergence.
+* Implement Adam to replace vanilla gradient descent, resulting in faster and more stable convergence.
 * More examples (MNIST).
 * Cross-Entropy Loss & Softmax.
 * This currently doesn't support tensors with more than 2 dimensions, so N-dimensional matrix operations could be something to look into.
 * Layer Normalisation.
-
-## References
-* **[3B1B: Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)**: Intro to neural networks with good visualisations
-* **[Micrograd](https://github.com/karpathy/micrograd)**: Inspiration for this project and how I learned the basics of an autodiff engine. `scalar.py` is very similar to micrograd as a result.
-* **[The Matrix Calculus You Need For Deep Learning](https://arxiv.org/abs/1802.01528)**: Introductory paper to matrix calculus in the context of ML (however, this paper does not explain matmul chain rule)
 
