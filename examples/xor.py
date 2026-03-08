@@ -4,50 +4,46 @@
 
 import numpy as np
 from engine.tensor import Tensor
+import engine.nn as nn
 
 def main():
+    np.random.seed(67)
+
     X = Tensor([[0, 0], [0, 1], [1, 0], [1, 1]]) # inputs
     Y = Tensor([[0], [1], [1], [0]]) # targets
 
-    np.random.seed(42) # random numbers are always the same -- 42 is for convention
+    model = nn.Sequential(
+        nn.Linear(2, 16),
+        nn.ReLu(),
+        nn.Linear(16, 1)
+    )
+
+    learning_rate = 0.025
 
     # input layer: 2 neurons (since 2 things to change)
-    # hidden layer: 16 neurons (4 did not work)
+    # hidden layer: 16 neurons
     # output layer: 1 neuron (0 or 1)
-    w1 = Tensor(np.random.randn(2, 16) * 0.1)
-    b1 = Tensor(np.zeros((1,16)))
-    w2 = Tensor(np.random.randn(16, 1) * 0.1)
-    b2 = Tensor(np.zeros((1,1)))
 
-    params = [w1, b1, w2, b2]
-    learning_rate = 0.05
+    print("Start training \n")
 
-    print("start training \n")
+    for i in range(100):
+        pred = model(X)
 
-    for i in range(200):
-        intermediate = (X @ w1 + b1).relu()
-        pred = intermediate @ w2 + b2 # no relu on the output otherwise negative numbers are gone
+        loss = ((pred - Y) * (pred - Y)).sum()
 
-        diff = pred - Y
-        loss = (diff * diff).sum()
+        model.zero_grad()
+        loss.backward() 
 
-        for p in params:
-            # reset gradients each loop
-            p.grad = np.zeros_like(p.data)
-
-        # starts backprop
-        loss.backward()
-
-        for p in params:
+        for p in model.parameters():
             p.data -= learning_rate * p.grad
 
-        if i % 20 == 0:
+        if i % 10 == 0:
             print(f"Iteration {i}: Loss: {loss.data:.4f}")
 
-    print("\ntraining complete\n")
+    print("\nTraining complete\n")
     print("Final Predictions: (target is [0, 1, 1, 0]):\n")
 
-    final_pred = (X @ w1 + b1).relu() @ w2 + b2
+    final_pred = model(X)
     print(np.round(final_pred.data, 3))
 
 if __name__ == "__main__":

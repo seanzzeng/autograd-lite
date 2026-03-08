@@ -23,7 +23,7 @@ class Linear(Module):
     def parameters(self):
         return [self.W, self.b]
 
-class Relu(Module):
+class ReLu(Module):
     # wrap relu in a class so it behaves similarly to linear layer
     def __call__(self, x):
         return x.relu()
