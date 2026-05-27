@@ -1,4 +1,4 @@
-A simple neural network framework written in Python (though the language is unimportant here) only using numPy. This project was intended to learn more about neural networks, inspired by the 3B1B series, rather than have any sort of real-world applications. Currently, this is capable of training a MLP on the MNIST dataset (100,000+ params) to ~94% accuracy using MSE loss.
+A simple neural network framework written in Python (though the language is unimportant here) only using numPy, with no other external libraries. The goal of this project was to learn more about neural networks, inspired by Karpathy and 3b1b, rather than to have any real world applications. Currently, this is capable of training a MLP on the MNIST dataset (100,000+ params) to ~94% accuracy using MSE loss.
 ```
 Fetching MNIST dataset...
 Start training 
@@ -19,4 +19,8 @@ Training complete
 ```
 We can visualise this using matplotlib:
 ![MNIST Training Progress](mnist_training_results.png)
+
+Future goals for this project:
+Adam
+Cross-Entropy loss
 
