@@ -20,7 +20,3 @@ Training complete
 We can visualise this using matplotlib:
 ![MNIST Training Progress](mnist_training_results.png)
 
-* Cross-Entropy Loss & Softmax.
-* This currently doesn't support tensors with more than 2 dimensions, so N-dimensional matrix operations could be something to look into.
-* Layer Normalisation.
-
