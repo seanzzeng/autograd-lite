@@ -1,48 +1,4 @@
-## Overview
-
-This project is a vectorised reverse-mode library written in Python that is able to run automatic differentiation on NumPy arrays. It works by constructing a dynamic computational graph implicitly during the forward pass. When `.backward()` is called on the loss function, the engine performs a topological sort on the graph, so the gradients w.r.t each parameter can be obtained using the multivariable chain rule.
-
-
-
-## Current Capabilities
-* **Reverse-Mode Autodiff:** Calculates gradients via backpropagation.
-* **Vectorised:** Removes scalar bottlenecks through using matrix operations (including matrix multiplications `@`)
-* **Broadcasting:** Handles reverse shape broadcasting during backpropagation. This is done by accumulating gradients across dimensions when adding tensors of different shapes during the backward pass. Note the forward broadcasting is natively handled by NumPy.
-* **Abstraction:** Replicates PyTorch's API (e.g. nn.Sequential)
-
-## Demo: XOR
-We focus on the XOR problem as it is the simplest application of machine learning.
-[The logic of the XOR problem is not linearly separable, meaning it cannot be solved by a standard single-layer perceptron.](https://dev.to/jbahire/demystifying-the-xor-problem-1blk)  
-We need at least a multilayer perceptron (MLP), which requires an autodiff library. The results matching the targets prove the engine is functional.  
-Let's run `examples/xor.py`, noting that the parameters are initialised to random values.
-```
-Start training 
-
-Iteration 0: Loss: 6.9946
-Iteration 10: Loss: 0.8705
-Iteration 20: Loss: 0.5595
-Iteration 30: Loss: 0.3457
-Iteration 40: Loss: 0.1966
-Iteration 50: Loss: 0.1033
-Iteration 60: Loss: 0.0517
-Iteration 70: Loss: 0.0251
-Iteration 80: Loss: 0.0120
-Iteration 90: Loss: 0.0057
-
-Training complete
-
-Final Predictions: (target is [0, 1, 1, 0]):
-
-[[0.044]
- [0.988]
- [0.978]
- [0.012]]
-```
-Here, we can observe that the loss value gradually decreases as the number of iterations increases, proving the library is functional.
-
-## Demo: MNIST
-This engine is capable of training a MLP on the MNIST dataset (100,000+ params) to ~90% accuracy using Mean Squared Error (MSE) loss. 
-We can check this by executing `examples/mnist.py`.
+A simple neural network framework written in Python (though the language is unimportant here) only using numPy. This project was intended to learn more about neural networks, inspired by the 3B1B series, rather than have any sort of real-world applications. Currently, this is capable of training a MLP on the MNIST dataset (100,000+ params) to ~94% accuracy using MSE loss.
 ```
 Fetching MNIST dataset...
 Start training 
@@ -64,8 +20,6 @@ Training complete
 We can visualise this using matplotlib:
 ![MNIST Training Progress](mnist_training_results.png)
 
-## Planning
-* Implement Adam to replace stochastic gradient descent, resulting in faster and more stable convergence.
 * Cross-Entropy Loss & Softmax.
 * This currently doesn't support tensors with more than 2 dimensions, so N-dimensional matrix operations could be something to look into.
 * Layer Normalisation.
